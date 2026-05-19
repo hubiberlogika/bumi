@@ -1,44 +1,20 @@
 "use client";
 
-import { Package, Truck, Receipt, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { Building2, FileText, Receipt, TrendingUp, Truck } from "lucide-react";
 import MobileDataCard from "@/components/ui/MobileDataCard";
+import {
+  dashboardFlowHighlights,
+  dashboardStats,
+  recentShipments,
+} from "@/features/dashboard/data/dashboardData";
 
-const stats = [
-  { name: "Total Shipments", value: "142", change: "+12%", icon: Truck, trend: "up" },
-  { name: "Active Contracts", value: "28", change: "+4%", icon: Package, trend: "up" },
-  { name: "Unpaid Invoices", value: "Rp 124.5M", change: "-2%", icon: Receipt, trend: "down" },
-  { name: "Monthly Revenue", value: "Rp 450.2M", change: "+18%", icon: TrendingUp, trend: "up" },
-];
-
-const recentShipments = [
-  {
-    id: "SHP-10042",
-    client: "PT Maju Bersama",
-    status: "In Transit",
-    statusColor: "blue",
-    origin: "Jakarta",
-    destination: "Surabaya",
-    date: "24 Apr 2026",
-  },
-  {
-    id: "SHP-10043",
-    client: "CV Agro Nusantara",
-    status: "Delivered",
-    statusColor: "green",
-    origin: "Semarang",
-    destination: "Bandung",
-    date: "23 Apr 2026",
-  },
-  {
-    id: "SHP-10044",
-    client: "PT Tekno Logistik",
-    status: "Pending",
-    statusColor: "yellow",
-    origin: "Jakarta",
-    destination: "Medan",
-    date: "25 Apr 2026",
-  },
-];
+const statIcons = {
+  quotation: FileText,
+  mitra: Building2,
+  invoice: Receipt,
+  revenue: TrendingUp,
+};
 
 export default function DashboardOverview() {
   return (
@@ -57,10 +33,13 @@ export default function DashboardOverview() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        {dashboardStats.map((stat) => {
+          const Icon = statIcons[stat.icon] || Truck;
+
+          return (
+          <div key={stat.name} className="glass-card rounded-2xl p-5 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <stat.icon className="w-16 h-16 text-primary-400" />
+              <Icon className="w-16 h-16 text-primary-400" />
             </div>
             <div className="relative z-10">
               <p className="text-sm font-medium text-slate-400">{stat.name}</p>
@@ -74,7 +53,7 @@ export default function DashboardOverview() {
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
@@ -82,7 +61,7 @@ export default function DashboardOverview() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">Recent Shipments</h2>
-            <button className="text-sm text-primary-400 hover:text-primary-300 font-medium">View All</button>
+            <Link href="/ops/shipments" className="text-sm text-primary-400 hover:text-primary-300 font-medium">View All</Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {recentShipments.map((shipment, idx) => (
@@ -103,28 +82,41 @@ export default function DashboardOverview() {
 
         {/* Quick Actions or Info (Placeholder for P&L Chart or Activity) */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-white">Quick Actions</h2>
+          <h2 className="text-lg font-semibold text-white">Flow Checkpoints</h2>
           <div className="glass-panel rounded-2xl p-4 space-y-3">
-            <button className="w-full flex items-center justify-between p-3 rounded-xl bg-primary-600 hover:bg-primary-500 transition-colors text-white font-medium text-sm">
-              <span>Create New Shipment</span>
-              <Truck className="w-4 h-4" />
-            </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors text-white font-medium text-sm border border-white/10">
-              <span>Create Quotation</span>
-              <Receipt className="w-4 h-4" />
-            </button>
+            {dashboardFlowHighlights.map((highlight) => (
+              <section key={highlight.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <h3 className="text-sm font-semibold text-white">{highlight.title}</h3>
+                <p className="mt-1 text-sm text-slate-400">{highlight.description}</p>
+                <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                  {highlight.items.map((item) => (
+                    <li key={item} className="rounded-xl border border-white/5 bg-black/10 px-3 py-2">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
           </div>
-          
-          {/* Warehouse Capacity Mini */}
+
           <div className="glass-card rounded-2xl p-5 mt-4">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium text-slate-300">Warehouse Capacity</h3>
-              <span className="text-xs text-primary-400 font-medium">75%</span>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-medium text-slate-300">Quick Actions</h3>
+                <p className="mt-1 text-xs text-slate-500">Langsung masuk ke flow aktif yang dipakai saat ini.</p>
+              </div>
+              <span className="text-xs text-primary-400 font-medium">Live</span>
             </div>
-            <div className="w-full bg-white/10 rounded-full h-2">
-              <div className="bg-gradient-to-r from-primary-500 to-indigo-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+            <div className="mt-4 space-y-3">
+              <Link href="/sales/quotations" className="flex items-center justify-between rounded-xl bg-primary-600 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-500">
+                <span>Buka Quotation</span>
+                <FileText className="h-4 w-4" />
+              </Link>
+              <Link href="/master/partners" className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10">
+                <span>Buka Mitra</span>
+                <Building2 className="h-4 w-4" />
+              </Link>
             </div>
-            <p className="text-xs text-slate-500 mt-2">1,200 / 1,600 Pallets Used</p>
           </div>
         </div>
       </div>

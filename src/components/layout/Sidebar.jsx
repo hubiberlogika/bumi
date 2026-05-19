@@ -2,17 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, FileText, Truck, Package, Receipt, Settings, LogOut } from "lucide-react";
+import { Settings, LogOut, Truck } from "lucide-react";
 import { clsx } from "clsx";
-
-const navigation = [
-  { name: "Overview", href: "/", icon: LayoutDashboard },
-  { name: "Sales (CRM)", href: "/sales/prospects", icon: Users },
-  { name: "Quotations", href: "/sales/quotations", icon: FileText },
-  { name: "Operations", href: "/ops/tracking", icon: Truck },
-  { name: "Warehouse", href: "/ops/warehouse", icon: Package },
-  { name: "Finance", href: "/finance/invoices", icon: Receipt },
-];
+import { desktopNavigation } from "@/config/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -39,7 +31,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <div className="flex-1 px-4 space-y-1 overflow-y-auto scrollbar-thin">
-        {navigation.map((item) => {
+        {desktopNavigation.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link

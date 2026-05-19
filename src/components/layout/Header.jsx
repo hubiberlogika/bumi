@@ -18,7 +18,7 @@ export default function Header() {
           <input
             id="search-field"
             className="block h-full w-full border-0 py-0 pl-8 pr-0 bg-transparent text-white placeholder:text-slate-400 focus:ring-0 sm:text-sm"
-            placeholder="Search shipments, prospects, or contracts..."
+            placeholder="Search quotations, shipments, or mitra..."
             type="search"
             name="search"
           />

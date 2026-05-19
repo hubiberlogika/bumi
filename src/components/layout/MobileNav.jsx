@@ -2,15 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Truck, FileText, Settings } from "lucide-react";
 import { clsx } from "clsx";
-
-const navigation = [
-  { name: "Overview", href: "/", icon: LayoutDashboard },
-  { name: "Ops", href: "/ops/tracking", icon: Truck },
-  { name: "Sales", href: "/sales/prospects", icon: FileText },
-  { name: "Settings", href: "/settings", icon: Settings },
-];
+import { mobileNavigation } from "@/config/navigation";
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -18,7 +11,7 @@ export default function MobileNav() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 glass-panel border-t border-white/10 pb-safe">
       <div className="flex justify-around items-center h-16">
-        {navigation.map((item) => {
+        {mobileNavigation.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <Link

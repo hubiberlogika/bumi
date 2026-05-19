@@ -1,5 +1,31 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Implementation Reference
+
+Project implementation reference is stored in `docs/`.
+
+- Start with `docs/01-product/prd-forwarding-local.md`
+- Use `docs/02-information-architecture/` for menu and routing decisions
+- Use `docs/07-implementation/technical-folder-structure.md` for source code placement rules
+
+## Target Source Structure
+
+The target application structure is organized by function:
+
+```text
+src/
+	app/
+	components/
+	features/
+	services/
+	hooks/
+	lib/
+	utils/
+	config/
+	styles/
+	constants/
+```
+
 ## Getting Started
 
 First, run the development server:
