@@ -11,6 +11,7 @@ import {
   createQuotationRecordFromForm,
   formatFinancialNumberInput,
   markQuotationInOperation,
+  parseFinancialNumberInput,
   QUOTATION_STORAGE_KEY,
   quotationFormDefaults,
   updateQuotationRecordFromForm,
@@ -57,16 +58,13 @@ function getFormDataFromRecord(record, accountOptions) {
 }
 
 function getLineTotal(itemLine) {
-  const quantity = Number(String(itemLine.quantity || "0").replace(/,/g, ""));
-  const unitPrice = Number(String(itemLine.unitPrice || "0").replace(/,/g, ""));
-
-  return (Number.isFinite(quantity) ? quantity : 0) * (Number.isFinite(unitPrice) ? unitPrice : 0);
+  return parseFinancialNumberInput(itemLine.quantity) * parseFinancialNumberInput(itemLine.unitPrice);
 }
 
 function formatLineTotal(itemLine) {
   const lineTotal = getLineTotal(itemLine);
 
-  return `${itemLine.currency || "IDR"} ${new Intl.NumberFormat("en-US", {
+  return `${itemLine.currency || "IDR"} ${new Intl.NumberFormat("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(lineTotal)}`;

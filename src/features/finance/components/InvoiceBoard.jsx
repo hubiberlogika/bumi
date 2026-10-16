@@ -3,16 +3,16 @@
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import MobileDataCard from "@/components/ui/MobileDataCard";
-import { formatFinancialNumberInput, QUOTATION_STORAGE_KEY, quotationRecords } from "@/features/sales/data/commercialData";
+import {
+  formatFinancialNumberInput,
+  parseFinancialNumberInput,
+  QUOTATION_STORAGE_KEY,
+  quotationRecords,
+} from "@/features/sales/data/commercialData";
 import { SHIPMENT_STORAGE_KEY, shipmentSeedRecords } from "@/features/operations/data/shipmentData";
 
-function parseNumericValue(value) {
-  const numericValue = Number(String(value || "0").replace(/,/g, ""));
-  return Number.isFinite(numericValue) ? numericValue : 0;
-}
-
 function formatAmount(currency, value) {
-  return `${currency} ${new Intl.NumberFormat("en-US", {
+  return `${currency} ${new Intl.NumberFormat("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(value)}`;
@@ -25,7 +25,7 @@ function usesExchangeRate(itemLine) {
 function getDraftSellingSummary(itemLines) {
   const totalsByCurrency = itemLines.reduce((currencyMap, itemLine) => {
     const currency = itemLine.currency || "IDR";
-    const lineTotal = parseNumericValue(itemLine.quantity) * parseNumericValue(itemLine.unitPrice);
+    const lineTotal = parseFinancialNumberInput(itemLine.quantity) * parseFinancialNumberInput(itemLine.unitPrice);
     const currentAmount = currencyMap.get(currency) || 0;
 
     currencyMap.set(currency, currentAmount + lineTotal);

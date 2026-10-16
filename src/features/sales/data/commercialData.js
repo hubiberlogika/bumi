@@ -11,21 +11,35 @@ export const QUOTATION_STORAGE_KEY = "bumi.quotations.records";
 const defaultAccountOptions = getAccountCodeOptions(accountCodeSeedRecords);
 
 export function formatFinancialNumberInput(value) {
-  const sanitizedValue = String(value || "")
-    .replace(/,/g, "")
-    .replace(/[^\d.]/g, "")
-    .replace(/(\..*)\./g, "$1");
+  const sanitizedValue = String(value ?? "").replace(/[^\d.,]/g, "");
 
   if (!sanitizedValue) return "";
 
-  const [integerPart, decimalPart] = sanitizedValue.split(".");
-  const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const lastSeparatorIndex = Math.max(sanitizedValue.lastIndexOf("."), sanitizedValue.lastIndexOf(","));
+  const hasBothSeparators = sanitizedValue.includes(".") && sanitizedValue.includes(",");
+  const isGroupedNumber = !hasBothSeparators && /^[\d]{1,3}(?:[.,]\d{3})+$/.test(sanitizedValue);
+  const hasDecimalSeparator = lastSeparatorIndex !== -1 && !isGroupedNumber;
+  const integerPart = hasDecimalSeparator
+    ? sanitizedValue.slice(0, lastSeparatorIndex).replace(/[.,]/g, "")
+    : sanitizedValue.replace(/[.,]/g, "");
+  const decimalPart = hasDecimalSeparator
+    ? sanitizedValue.slice(lastSeparatorIndex + 1).replace(/[.,]/g, "")
+    : undefined;
+  const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   if (decimalPart !== undefined) {
-    return `${formattedIntegerPart}.${decimalPart}`;
+    return `${formattedIntegerPart},${decimalPart}`;
   }
 
   return formattedIntegerPart;
+}
+
+export function parseFinancialNumberInput(value) {
+  const formattedValue = formatFinancialNumberInput(value);
+  if (!formattedValue) return 0;
+
+  const numericValue = Number(formattedValue.replace(/\./g, "").replace(",", "."));
+  return Number.isFinite(numericValue) ? numericValue : 0;
 }
 
 function createQuotationLineItem(overrides = {}, accountOptions = defaultAccountOptions) {
@@ -90,12 +104,11 @@ function formatSellingAmount(currency, amount) {
 }
 
 function parseNumericValue(value) {
-  const numericValue = Number(String(value || "0").replace(/,/g, ""));
-  return Number.isFinite(numericValue) ? numericValue : 0;
+  return parseFinancialNumberInput(value);
 }
 
 function formatNumberDisplay(value) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(value);
