@@ -502,11 +502,11 @@ export default function QuotationWorkspace({
                   <td className="px-3 py-3 text-slate-300">{itemLine.accountName}</td>
                   <td className="px-3 py-3">
                     <div className="space-y-2">
-                      <input
-                        type="text"
+                      <textarea
+                        rows={2}
                         value={itemLine.description}
                         onChange={(event) => handleLineItemChange(itemLine.id, "description", event.target.value)}
-                        className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-500 focus:border-primary-500"
+                        className="w-full resize-y rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-500 focus:border-primary-500"
                         placeholder="Deskripsi item"
                       />
                       {usesExchangeRate(itemLine) ? (
@@ -623,11 +623,11 @@ export default function QuotationWorkspace({
 
                 <label className="space-y-2 md:col-span-2">
                   <span className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">Description</span>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={2}
                     value={itemLine.description}
                     onChange={(event) => handleLineItemChange(itemLine.id, "description", event.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-500 focus:border-primary-500"
+                    className="w-full resize-y rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none transition-colors placeholder:text-slate-500 focus:border-primary-500"
                     placeholder="Deskripsi item"
                   />
                 </label>

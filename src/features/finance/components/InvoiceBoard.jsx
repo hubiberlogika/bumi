@@ -238,7 +238,7 @@ export default function InvoiceBoard() {
                                         <td className="px-3 py-3 text-slate-300">{itemLine.accountCode}</td>
                                         <td className="px-3 py-3 text-slate-300">{itemLine.accountName}</td>
                                         <td className="px-3 py-3 text-slate-300">
-                                          <div>{itemLine.description}</div>
+                                          <div className="whitespace-pre-line break-words">{itemLine.description}</div>
                                           {usesExchangeRate(itemLine) ? (
                                             <div className="mt-2 inline-flex rounded-full border border-amber-400/20 bg-amber-500/10 px-2.5 py-1 text-xs text-amber-100">
                                               Applied Rate {formatFinancialNumberInput(itemLine.exchangeRate)}
